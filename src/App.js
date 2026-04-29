@@ -5,14 +5,14 @@ import PokemonDetails from './Pages/PokemonDetails'
 
 
 
-function App() {
+function App( {renderTypes} ) {
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/PokemonList" element={<PokemonList />} />
-          <Route path="/PokemonDetails/:id" element={<PokemonDetails />} />
+          <Route path="/PokemonDetails/:id" element={<PokemonDetails renderTypes={renderTypes} />} />
         </Routes>
       </div>
     </Router>

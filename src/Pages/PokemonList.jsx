@@ -1,14 +1,15 @@
-
-import React from 'react'
+import React from "react";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import Nav from '../Components/Nav';
-import Footer from '../Components/Footer';
-import Search from '../Components/ui/Search';
-import Sort from '../Components/ui/Sort';
-const MAX_TEAM_SIZE = 6;
+import Nav from "../Components/Nav";
+import Footer from "../Components/Footer";
+import Search from "../Components/ui/Search";
+import Sort from "../Components/ui/Sort";
+import Card from "../Components/ui/Card";
+import TeamCard from "../Components/ui/TeamCard";
 
+const MAX_TEAM_SIZE = 6;
 
 const PokemonList = () => {
   const location = useLocation();
@@ -33,7 +34,6 @@ const PokemonList = () => {
           })
         );
 
-
         setAllPokemon(details);
       } catch (error) {
         console.error(error);
@@ -45,108 +45,117 @@ const PokemonList = () => {
   }, []);
 
   function addToTeam(pokemon) {
-    if (team.length >= MAX_TEAM_SIZE) {
-      setError("Team is full. Remove a Pokémon first.");
-      return;
+  // Use the functional update pattern to ensure you're working with the latest state
+  setTeam((prevTeam) => {
+    if (prevTeam.length >= MAX_TEAM_SIZE) {
+      setError("Team is full.");
+      return prevTeam;
     }
-
-    if (team.some((p) => p.id === pokemon.id)) {
-      setError("That Pokémon is already in your team.");
-      return;
+    if (prevTeam.some((p) => p.id === pokemon.id)) {
+      setError("Already in team.");
+      return prevTeam;
     }
-
-    setTeam([...team, pokemon]);
-    setError("");
-  }
+    return [...prevTeam, pokemon];
+  });
+  setError("");
+}
 
   function removeFromTeam(id) {
     setTeam(team.filter((pokemon) => pokemon.id !== id));
   }
-
-  const searchedFound = searchedPokemon && !allPokemon.some((p) => p.id === searchedPokemon.id);
+console.log(team)
+  const searchedFound =
+    searchedPokemon && !allPokemon.some((p) => p.id === searchedPokemon.id);
 
   const renderTypes = (types = []) => {
-  return (
-    <ul className="pokemon-types">
-      {types
-        .slice()
-        .sort((a, b) => a.slot - b.slot)
-        .map((typeInfo) => (
-          <li key={typeInfo.slot} className="pokemon-type">
-            {typeInfo.type.name}
-          </li>
-        ))}
-    </ul>
-  );
-};
+    return (
+      <ul className="pokemon-types">
+        {types
+          .slice()
+          .sort((a, b) => a.slot - b.slot)
+          .map((typeInfo) => (
+            <li key={typeInfo.slot} className="pokemon-type">
+              {typeInfo.type.name}
+            </li>
+          ))}
+      </ul>
+    );
+  };
 
-const filteredAndSortedPokemon = useMemo(() => {
-  let list = [...allPokemon];
-  if (selectedType) {
-    list = list.filter(p => p.types.some(t => t.type.name === selectedType));
-  }
-  return list.sort((a, b) => a.name.localeCompare(b.name));
-}, [allPokemon, selectedType]);
+  const filteredAndSortedPokemon = useMemo(() => {
+    let list = [...allPokemon];
+    if (selectedType) {
+      list = list.filter((p) =>
+        p.types.some((t) => t.type.name === selectedType)
+      );
+    }
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }, [allPokemon, selectedType]);
 
+  // In your parent component
+useEffect(() => {
+  const savedTeam = JSON.parse(localStorage.getItem('TeamCard'));
+  if (savedTeam) setTeam(savedTeam);
+}, []);
 
+useEffect(() => {
+  localStorage.setItem('TeamCard', JSON.stringify(team));
+}, [team]);
+  
 
   return (
     <div>
       <div>
         <Nav />
-        <h1>Pokemon List</h1>
         <Search />
-        <Sort selectedType={selectedType} setSelectedType={setSelectedType} />
-        <h2>Your Team</h2>
-        <div className="team__container">
-          {team.map((pokemon) => (
-            <div key={pokemon.id} className="pokemon-card">
-              <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-              <h4>{pokemon.name}</h4>
-              <p>#{pokemon.id}</p>
-              {renderTypes(pokemon.types)}
-              <button className='select-pokemon' onClick={() => removeFromTeam(pokemon.id)}>Remove</button>
-            </div>
-          ))}
-        </div>
+        <Sort
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
+        />
+
         {searchedPokemon && (
           <div className="pokemon-search-result">
             <h2>Searched Pokémon</h2>
-            <div className="pokemon-card">
-              <img
-                src={searchedPokemon.sprites.front_default}
-                alt={searchedPokemon.name}
-              />
-              <h4>{searchedPokemon.name}</h4>
-              <p>#{searchedPokemon.id}</p>
-              {renderTypes(searchedPokemon.types)}
-              {!team.some((p) => p.id === searchedPokemon.id) ? (
-              <button className='select-pokemon' onClick={() => addToTeam(searchedPokemon)}>Add to team</button>
-            ) : (
-              <button className='select-pokemon' onClick={() => removeFromTeam(searchedPokemon.id)}>Remove</button>
-            )}
-            </div>
+            <Card
+              id={searchedPokemon.id}
+              name={searchedPokemon.name}
+              image={searchedPokemon.sprites.front_default}
+              imageAlt={searchedPokemon.name}
+              subtitle={`#${searchedPokemon.id}`}
+              children={renderTypes(searchedPokemon.types)}
+              onAdd={searchedPokemon ? () => addToTeam(searchedPokemon) : null}
+              onRemove={
+                searchedPokemon ? () => removeFromTeam(searchedPokemon.id) : null
+              }
+              isAdded={team.some((p) => p.id === searchedPokemon.id)}
+            />
           </div>
         )}
       </div>
 
-      {error && <p>{error}</p>}
+      <h2>Your Team</h2>
+      <TeamCard
+      team={team}
+      renderTypes={renderTypes}
+      removeFromTeam={removeFromTeam} />
 
+      {error && <p>{error}</p>}
+      <h1>Pokemon List</h1>
       <div className="pokemon__grid">
         {filteredAndSortedPokemon.map((pokemon) => (
-          <div key={pokemon.id} className="pokemon-card">
-            <Link to={`/PokemonDetails/${pokemon.id}`} className="pokemon-link">
-              <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-              <h4>{pokemon.name}</h4>
-              <p>#{pokemon.id}</p>
-              {renderTypes(pokemon.types)}
-            </Link>
-            {!team.some((p) => p.id === pokemon.id) ? (
-              <button className='select-pokemon' onClick={() => addToTeam(pokemon)}>Add to team</button>
-            ) : (
-              <button className='select-pokemon' onClick={() => removeFromTeam(pokemon.id)}>Remove</button>
-            )}
-          </div>
+          <Card
+            key={pokemon.id}
+            id={pokemon.id}
+            name={pokemon.name}
+            image={pokemon.sprites.front_default}
+            imageAlt={pokemon.name}
+            subtitle={`#${pokemon.id}`}
+            to={`/PokemonDetails/${pokemon.id}`}
+            children={renderTypes(pokemon.types)}
+            onAdd={() => addToTeam(pokemon)}
+            onRemove={() => removeFromTeam(pokemon.id)}
+            isAdded={team.some((p) => p.id === pokemon.id)}
+          />
         ))}
       </div>
       <Footer />
@@ -155,4 +164,3 @@ const filteredAndSortedPokemon = useMemo(() => {
 };
 
 export default PokemonList;
-

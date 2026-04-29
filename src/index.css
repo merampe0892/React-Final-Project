@@ -77,6 +77,68 @@ body {
   opacity: 0.95;
 }
 
+.btn__menu {
+  display: none;
+  background-color: transparent;
+  font-size: 32px;
+  border: none;
+  color: #7342d6;
+  display: none;
+}
+
+.menu__backdrop {
+  display: none;
+  position: absolute;
+  background-color: #242424;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  transition: all 300ms ease;
+  opacity: 0;
+  transform: translate(100%);
+}
+
+.menu--open {
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.menu__backdrop.menu--open {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+  transform: translate(0);
+}
+
+.menu__links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu__list {
+  padding: 32px 0;
+}
+
+.menu__link {
+  color: white;
+  font-size: 40px;
+}
+
+.btn__menu--close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  padding: 8px;
+  color: white;
+}
+
 /* Type Sorter */
 .type-sorter {
   max-width: 500px;
@@ -177,12 +239,16 @@ body {
 }
 
 .poke__img--wrapper {
+   display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   padding: 20px;
   text-align: center;
 }
 
 .landing__logo {
-  max-width: 800px;
+  max-width: 1200px
 }
 
 main {
@@ -263,6 +329,47 @@ main {
   padding: 0.35rem 0.6rem;
   border-radius: 999px;
   text-transform: capitalize;
+}
+
+.pokemon__container {
+  width: 100%;
+  padding: 16px 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  /* optional: minimal height so you see it */
+  min-height: 100px;
+}
+
+.pokemon-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pokemon-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.pokemon-card h4 {
+  margin: 8px 0 4px;
+  font-size: 0.95rem;
+}
+
+.pokemon-card button {
+  margin-top: 8px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
 }
 
 /* Team */
@@ -434,10 +541,17 @@ main {
   .footer__container {
     grid-template-columns: 1fr 1fr;
   }
+
+  .landing__logo {
+   width: 650px;
+  }
 }
 
 /* SMALL TABLETS, SMALL PHONES 480px */
 @media (max-width: 480px) {
+  .btn__menu {
+    display: block;
+  }
 
   body {
     font-size: 14px;
@@ -458,6 +572,10 @@ main {
   .logo svg {
     width: 120px;
     height: 120px;
+  }
+
+  .landing__logo {
+   width: 400px;
   }
 
   .search-bar {
