@@ -45,7 +45,6 @@ const PokemonList = () => {
   }, []);
 
   function addToTeam(pokemon) {
-  // Use the functional update pattern to ensure you're working with the latest state
   setTeam((prevTeam) => {
     if (prevTeam.length >= MAX_TEAM_SIZE) {
       setError("Team is full.");
@@ -92,7 +91,6 @@ console.log(team)
     return list.sort((a, b) => a.name.localeCompare(b.name));
   }, [allPokemon, selectedType]);
 
-  // In your parent component
 useEffect(() => {
   const savedTeam = JSON.parse(localStorage.getItem('TeamCard'));
   if (savedTeam) setTeam(savedTeam);
