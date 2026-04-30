@@ -18,7 +18,7 @@ const Footer = () => {
             </div>
             <div className="footer__section">
                 <h4>Powered by</h4>
-                <a href="https://pokeapi.co/" target="_blank" rel="noopener">
+                <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">
                 PokéAPI
                 </a>
             </div>

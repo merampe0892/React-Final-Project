@@ -15,8 +15,6 @@ const shuffleArray = (array) => {
   return result;
 };
 
-const MAX_TEAM_SIZE = 6;
-
 const PokemonDetails = ({ renderTypes }) => {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState(null);
@@ -67,11 +65,9 @@ const PokemonDetails = ({ renderTypes }) => {
       return [];
     }
 
-    const others = allPokemon.filter((p) => p.id !== pokemon.id);
-
     const shuffled = shuffleArray(allPokemon);
     return shuffled.slice(0, 6);
-  }, [allPokemon, pokemon, id]);
+  }, [allPokemon, pokemon]);
 
 
   if (!pokemon) return <p>Loading...</p>;
