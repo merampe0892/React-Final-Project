@@ -6,6 +6,7 @@ import PokemonDetails from './Pages/PokemonDetails'
 
 
 function App( {renderTypes} ) {
+  
   return (
     <Router>
       <div className="App">

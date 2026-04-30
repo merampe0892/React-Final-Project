@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useMemo } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Nav from "../Components/Nav";
 import Footer from "../Components/Footer";
@@ -62,9 +62,6 @@ const PokemonList = () => {
   function removeFromTeam(id) {
     setTeam(team.filter((pokemon) => pokemon.id !== id));
   }
-console.log(team)
-  const searchedFound =
-    searchedPokemon && !allPokemon.some((p) => p.id === searchedPokemon.id);
 
   const renderTypes = (types = []) => {
     return (
@@ -113,13 +110,14 @@ useEffect(() => {
 
         {searchedPokemon && (
           <div className="pokemon-search-result">
-            <h2>Searched Pokémon</h2>
+            <h2 className="team-title">Searched Pokémon</h2>
             <Card
               id={searchedPokemon.id}
               name={searchedPokemon.name}
               image={searchedPokemon.sprites.front_default}
               imageAlt={searchedPokemon.name}
               subtitle={`#${searchedPokemon.id}`}
+              to={`/PokemonDetails/${searchedPokemon.id}`}
               children={renderTypes(searchedPokemon.types)}
               onAdd={searchedPokemon ? () => addToTeam(searchedPokemon) : null}
               onRemove={
@@ -131,14 +129,14 @@ useEffect(() => {
         )}
       </div>
 
-      <h2>Your Team</h2>
+      <h2 className="team-title">Create Your Team</h2>
       <TeamCard
       team={team}
       renderTypes={renderTypes}
       removeFromTeam={removeFromTeam} />
 
       {error && <p>{error}</p>}
-      <h1>Pokemon List</h1>
+      <h1 className="team-title">Pokemon List</h1>
       <div className="pokemon__grid">
         {filteredAndSortedPokemon.map((pokemon) => (
           <Card

@@ -13,6 +13,7 @@ const TeamCard = ({ renderTypes, removeFromTeam, team }) => {
             image={pokemon.sprites?.front_default}
             imageAlt={pokemon.name}
             subtitle={`#${pokemon.id}`}
+            to={`/PokemonDetails/${pokemon.id}`}
             children={renderTypes(pokemon?.types || [])}
             onRemove={() => removeFromTeam(pokemon.id)}
             isAdded={true}

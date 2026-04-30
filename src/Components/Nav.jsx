@@ -84,14 +84,14 @@ const Nav = () => {
           >
             <FontAwesomeIcon icon="times" />
           </button>
-          <div className="nav__links">
-            <Link to="/" className="nav__link">
+          <div className="menu__links">
+            <Link to="/" className="menu__link">
               Home
             </Link>
-            <Link to="/PokemonList" className="nav__link">
+            <Link to="/PokemonList" className="menu__link">
               Pokemon
             </Link>
-            <Link to="/contact" className="nav__link">
+            <Link to="/contact" className="menu__link">
               Contact
             </Link>
           </div>
