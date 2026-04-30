@@ -78,6 +78,7 @@ body {
 }
 
 .btn__menu {
+  position: fixed;
   display: none;
   background-color: transparent;
   font-size: 32px;
@@ -85,12 +86,13 @@ body {
   color: #7342d6;
   display: none;
   scale: 0.3;
+  top: 10px;
   right: 20px;
 }
 
 .menu__backdrop {
   display: none;
-  position: absolute;
+  position: fixed;
   background-color: #242424;
   top: 0;
   left: 0;
